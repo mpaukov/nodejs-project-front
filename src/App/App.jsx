@@ -25,7 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeView />} />
         <Route
-          path="register"
+          path="signup"
           element={
             <PublicRoute>
               <RegisterView />

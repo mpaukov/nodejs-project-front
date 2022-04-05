@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-axios.defaults.baseURL = 'https://connections-api.herokuapp.com';
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 
 const token = {
   set(token) {
@@ -13,13 +13,13 @@ const token = {
 };
 
 /*
- * POST @ /users/signup
+ * POST @ /auth/signup
  * body: { name, email, password }
  * После успешной регистрации добавляем токен в HTTP-заголовок
  */
-const register = createAsyncThunk('auth/register', async credentials => {
+const register = createAsyncThunk('auth/signup', async credentials => {
   try {
-    const { data } = await axios.post('/users/signup', credentials);
+    const { data } = await axios.post('/auth/signup', credentials);
     token.set(data.token);
     return data;
   } catch (error) {
@@ -29,13 +29,13 @@ const register = createAsyncThunk('auth/register', async credentials => {
 });
 
 /*
- * POST @ /users/login
+ * POST @ /auth/login
  * body: { email, password }
  * После успешного логина добавляем токен в HTTP-заголовок
  */
 const logIn = createAsyncThunk('auth/login', async credentials => {
   try {
-    const { data } = await axios.post('/users/login', credentials);
+    const { data } = await axios.post('/auth/login', credentials);
     token.set(data.token);
     return data;
   } catch (error) {
@@ -45,13 +45,13 @@ const logIn = createAsyncThunk('auth/login', async credentials => {
 });
 
 /*
- * POST @ /users/logout
+ * POST @ /auth/logout
  * headers: Authorization: Bearer token
  * После успешного логаута, удаляем токен из HTTP-заголовка
  */
 const logOut = createAsyncThunk('auth/logout', async () => {
   try {
-    await axios.post('/users/logout');
+    await axios.get('/auth/logout');
     token.unset();
   } catch (error) {
     console.log('Error during log out user', error);
